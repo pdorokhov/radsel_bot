@@ -1,30 +1,26 @@
-/*#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <ESP8266WebServer.h>*/
 
-#define WIFI_SSID "WIFI_SSID"
-#define WIFI_PASS "WIFI_PASS"
-#define BOT_TOKEN "BOT_TOKEN"
+#define WIFI_SSID "*********"
+#define WIFI_PASS "*********"
+#define BOT_TOKEN "*************************************"
+#define CHAT_ID "****"
+
 #include <FastBot.h>
 FastBot bot(BOT_TOKEN);
 
-/*const int iStatus = D1;*/
+
 const int iArm  = D2;
 const int iMove1 = D3;
 const int iMove2 = D4;
 bool xStatus = false;
-bool motionDetected2 = false;
 bool motionDetected1 = false;
+bool motionDetected2 = false;
 
-/*IPAddress ip(192, 168, 88, 203);
-IPAddress gateway(192, 168, 88, 1);
-IPAddress subnet(255, 255, 255, 0);*/
 
 
 /*-----------------------------INTERRUPTS-------------------------------*/
 void ICACHE_RAM_ATTR detectsMovement1() { 
   if (xStatus == true) {motionDetected1 = true;}}
-void ICACHE_RAM_ATTR detectsMovement2() 
+void ICACHE_RAM_ATTR detectsMovement2() {
   if (xStatus == true) {motionDetected2 = true;}}
 /*-------------------------------SETUP---------------------------------*/
 void setup() 
@@ -39,10 +35,10 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(iMove1), detectsMovement1, FALLING);
   attachInterrupt(digitalPinToInterrupt(iMove2), detectsMovement2, FALLING);
   
-  bot.sendMessage("\nСоединение с сетью WIFI установлено", "CHAT_ID");
-  bot.sendMessage("IP-адрес: 192.168.88.203", "CHAT_ID");
-  if (xStatus){ bot.sendMessage("Режим: ОХРАНА", "CHAT_ID");}
-    else{ bot.sendMessage("Режим: НАБЛЮДЕНИЕ", "CHAT_ID"); }
+  bot.sendMessage("\nСоединение с сетью WIFI установлено", CHAT_ID);
+  bot.sendMessage("IP-адрес: 192.168.88.203", CHAT_ID);
+  if (xStatus){ bot.sendMessage("Режим: ОХРАНА", CHAT_ID);}
+    else{ bot.sendMessage("Режим: НАБЛЮДЕНИЕ", CHAT_ID); }
 }
 
 /*----------------------------FUN_FASTBOT-----------------------------*/
@@ -75,8 +71,8 @@ void loop() {
 
 bot.tick();
   
-if (motionDetected1 == true){ bot.sendMessage("Движение комната!", "CHAT_ID"); motionDetected1 = false; }
-if (motionDetected2 == true){ bot.sendMessage("Движение коридор!", "CHAT_ID"); motionDetected2 = false; }
+if (motionDetected1 == true){ bot.sendMessage("Движение комната!", CHAT_ID); motionDetected1 = false; }
+if (motionDetected2 == true){ bot.sendMessage("Движение коридор!", CHAT_ID); motionDetected2 = false; }
 }
 void connectWiFi() {
   delay(2000);
