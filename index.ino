@@ -10,11 +10,11 @@ FastBot bot(BOT_TOKEN);
 
 /*const int iStatus = D1;*/
 const int iArm  = D2;
-const int iMove = D3;
-const int iFire = D4;
+const int iMove1 = D3;
+const int iMove2 = D4;
 bool xStatus = false;
-bool xFireOn = false;
-bool motionDetected = false;
+bool motionDetected2 = false;
+bool motionDetected1 = false;
 
 /*IPAddress ip(192, 168, 88, 203);
 IPAddress gateway(192, 168, 88, 1);
@@ -22,22 +22,22 @@ IPAddress subnet(255, 255, 255, 0);*/
 
 
 /*-----------------------------INTERRUPTS-------------------------------*/
-void ICACHE_RAM_ATTR detectsMovement() { 
-  if (xStatus == true) {motionDetected = true;}}
-void ICACHE_RAM_ATTR detectsFire() { xFireOn = true; }
-
+void ICACHE_RAM_ATTR detectsMovement1() { 
+  if (xStatus == true) {motionDetected1 = true;}}
+void ICACHE_RAM_ATTR detectsMovement2() 
+  if (xStatus == true) {motionDetected2 = true;}}
 /*-------------------------------SETUP---------------------------------*/
 void setup() 
 {
   /*pinMode(iStatus, INPUT);*/
   pinMode(iArm, OUTPUT);
-  pinMode(iMove, INPUT);
-  pinMode(iFire, INPUT);
+  pinMode(iMove1, INPUT);
+  pinMode(iMove2, INPUT);
   digitalWrite(iArm, true);
   connectWiFi();
   bot.attach(newMsg);
-  attachInterrupt(digitalPinToInterrupt(iMove), detectsMovement, FALLING);
-  attachInterrupt(digitalPinToInterrupt(iFire), detectsFire, FALLING);
+  attachInterrupt(digitalPinToInterrupt(iMove1), detectsMovement1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(iMove2), detectsMovement2, FALLING);
   
   bot.sendMessage("\nСоединение с сетью WIFI установлено", "CHAT_ID");
   bot.sendMessage("IP-адрес: 192.168.88.203", "CHAT_ID");
@@ -59,13 +59,13 @@ void newMsg(FB_msg& msg)
     else{
       bot.sendMessage("Режим: НАБЛЮДЕНИЕ", msg.chatID);
     }
-    if (motionDetected){ bot.sendMessage("Датчик движения: АКТИВЕН", msg.chatID);}
+    if (motionDetected1){ bot.sendMessage("Датчик движения комната: АКТИВЕН", msg.chatID);}
     else{
-      bot.sendMessage("Датчик движения: НЕ активен", msg.chatID);
+      bot.sendMessage("Датчик движения комната: НЕ активен", msg.chatID);
     }
-  if (xFireOn){ bot.sendMessage("Датчик задымления: АКТИВЕН", msg.chatID);}
+  if (motionDetected2){ bot.sendMessage("Датчик движения коридор: АКТИВЕН", msg.chatID);}
     else{
-      bot.sendMessage("Датчик задымления: НЕ активен", msg.chatID);
+      bot.sendMessage("Датчик движения коридор: НЕ активен", msg.chatID);
     }
   }
 }
@@ -75,8 +75,8 @@ void loop() {
 
 bot.tick();
   
-if (motionDetected == true){ bot.sendMessage("Движение!", "CHAT_ID"); motionDetected = false; }
-if (xFireOn == true){ bot.sendMessage("Задымление!", "CHAT_ID"); xFireOn = false; }
+if (motionDetected1 == true){ bot.sendMessage("Движение комната!", "CHAT_ID"); motionDetected1 = false; }
+if (motionDetected2 == true){ bot.sendMessage("Движение коридор!", "CHAT_ID"); motionDetected2 = false; }
 }
 void connectWiFi() {
   delay(2000);
